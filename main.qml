@@ -6,13 +6,17 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
+    title: qsTr("Giudice di gara")
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("File")
+            title: qsTr("Configura")
             MenuItem {
-                text: qsTr("&Open")
+                text: qsTr("&Giudice")
+                onTriggered: console.log("Open action triggered");
+            }
+            MenuItem {
+                text: qsTr("&Server")
                 onTriggered: console.log("Open action triggered");
             }
             MenuItem {
@@ -24,8 +28,8 @@ ApplicationWindow {
 
     MainForm {
         anchors.fill: parent
-        button1.onClicked: messageDialog.show(qsTr("Button 1 pressed"))
-        button2.onClicked: messageDialog.show(qsTr("Button 2 pressed"))
+        //button1.onClicked: messageDialog.show(qsTr("Button 1 pressed"))
+        //button2.onClicked: messageDialog.show(qsTr("Button 2 pressed"))
     }
 
     MessageDialog {
