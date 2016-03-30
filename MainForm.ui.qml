@@ -6,8 +6,9 @@ import QtQuick.Controls.Styles 1.2
 Item {
     width: 640
     height: 480
-
-    property alias button2: button2
+    property alias registra: registra
+    property alias voto: voto
+    property alias pettorina: pettorina
 
     ColumnLayout {
         id: columnLayout1
@@ -23,7 +24,7 @@ Item {
         }
 
         TextField {
-            id: textField1
+            id: pettorina
             Layout.fillHeight: true
             Layout.fillWidth: true
             font.pointSize: 70
@@ -41,7 +42,7 @@ Item {
         }
 
         TextField {
-            id: textField2
+            id: voto
             text: qsTr("")
             placeholderText: qsTr("Voto")
             Layout.fillHeight: true
@@ -53,7 +54,7 @@ Item {
         }
 
         Button {
-            id: button2
+            id: registra
             height: 90
             text: qsTr("Registra")
             Layout.rowSpan: 1
