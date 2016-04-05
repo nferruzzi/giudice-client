@@ -1,8 +1,7 @@
 
-function checkConnection() {
-    print("Check connection");
-
-    var xhr = new XMLHttpRequest();
+function request(verb, endpoint, obj, cb) {
+    var BASE = 'http://%1'.arg(settings.serverAddress)
+    print('request: ' + verb + ' ' + BASE + (endpoint?'/' + endpoint:''))
 
     var timer = Qt.createQmlObject("import QtQuick 2.3; Timer {interval: 2000; repeat: false; running: true;}",root,"MyTimer");
     timer.triggered.connect(function(){
@@ -11,27 +10,45 @@ function checkConnection() {
         statusBar.state = "disconnected";
     });
 
+    var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
-        }
-        else
+        //print('xhr: on ready state change: ' + xhr.readyState)
         if (xhr.readyState === XMLHttpRequest.DONE) {
-            console.log("on ready state change:" + xhr.readyState + " " + xhr.status);
-            if (xhr.status === 200) {
-                statusBar.state = "connected";
-                timer.running = false;
-            } else {
-                statusBar.state = "disconnected";
+            timer.running = false;
+            if(cb) {
+                var res = JSON.parse(xhr.responseText.toString())
+                cb(xhr, res);
             }
-        }
-        else
-        if (xhr.readyState === 4) {
-            console.log("on ready state change:" + xhr.readyState);
-            statusBar.state = "disconnected";
         }
     }
 
-    var s = "http://%1/".arg(settings.serverAddress);
-    xhr.open("GET", s);
-    xhr.send();
+    xhr.open(verb, BASE + (endpoint?'/' + endpoint:''));
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Accept', 'application/json');
+    var data = obj?JSON.stringify(obj):''
+    xhr.send(data)
+}
+
+function checkConnection(cb) {
+    print("Check connection");
+
+    request('GET', null, null, function (xhr, res) {
+        print("Callback");
+        if (xhr.status === 200) {
+            statusBar.state = "connected";
+            if (cb) cb(res);
+        } else {
+            statusBar.state = "disconnected";
+            if (cb) cb(null);
+        }
+    });
+}
+
+function sendVote(trial, user, vote, judge, cb) {
+    print("Send vote");
+
+    var obj = {'trial': trial, 'user': user, 'vote': vote, 'judge': judge};
+    request('POST', 'vote', obj, function(xhr, resp) {
+        print("Response: ", resp);
+    });
 }
