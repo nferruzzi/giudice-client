@@ -13,9 +13,46 @@ ApplicationWindow {
     height: 480
     title: qsTr("Giudice di gara")
 
+    StateGroup {
+        id: stateGroup
+        state: "on"
+        states: [
+            State {
+                name: "off"
+                PropertyChanges {
+                }
+            },
+            State {
+                name: "on"
+                PropertyChanges {
+                }
+            }
+        ]
+    }
+
+    function checkConnection() {
+        if (stateGroup.state === "off") return;
+
+        Network.checkConnection(function(state) {
+            if (state) {
+                console.log(state);
+                var version = '1.0';
+
+                if (state.version !== version) {
+                    stateGroup.state = "off";
+                    statusBar.state = "serverError";
+                    messageDialog.show(qsTr("Errore"), qsTr("Il server (%1) e il client (%2) non usano la stessa versione del software").arg(state.version).arg(version));
+                    return;
+                }
+
+                console.log(state.version);
+            }
+        });
+    }
+
     Timer {
-        interval: 5000; running: true; repeat: true
-        onTriggered: Network.checkConnection()
+        interval: 3000; running: true; repeat: true
+        onTriggered: checkConnection()
     }
 
     menuBar: MenuBar {
@@ -37,6 +74,16 @@ ApplicationWindow {
                     dlg.open();
                 }
             }
+            MenuSeparator {}
+            MenuItem {
+                text: qsTr("&Collegati al server")
+                checked: true
+                visible: stateGroup.state === "off"
+                onTriggered: function () {
+                    stateGroup.state = "on";
+                }
+            }
+
             MenuItem {
                 text: qsTr("Exit")
                 onTriggered: Qt.quit();
@@ -47,7 +94,9 @@ ApplicationWindow {
     statusBar: StatusBar {
         id: statusBar
         state: "disconnected"
-        Component.onCompleted: Network.checkConnection();
+        Component.onCompleted: {
+            checkConnection();
+        }
         states: [
             State {
                 name: "connected"
@@ -63,6 +112,14 @@ ApplicationWindow {
                     target: labelState
                     color: "red"
                     text: qsTr("Server non raggiungibile: %1").arg(settings.serverAddress)
+                }
+            },
+            State {
+                name: "serverError"
+                PropertyChanges {
+                    target: labelState
+                    color: "red"
+                    text: qsTr("Server non compatibile: %1").arg(settings.serverAddress)
                 }
             }
         ]
@@ -125,5 +182,4 @@ ApplicationWindow {
         property string serverAddress: ""
         property string numeroGiudice: ""
     }
-
 }
