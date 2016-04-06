@@ -70,7 +70,7 @@ ApplicationWindow {
             anchors.fill: parent
             Label {
                 id: labelState
-                font.pointSize: 8
+                font.pointSize: 16
             }
         }
     }
