@@ -23,8 +23,8 @@ Dialog {
                text: settings.serverAddress
                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                Layout.rowSpan: 1
-               placeholderText: qsTr("es. 192.168.0.1")
-               inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+               placeholderText: qsTr("es. 192.168.0.1:8000 or server:8000")
+               inputMethodHints: Qt.ImhUrlCharactersOnly
                Keys.onReturnPressed: {
                    Qt.inputMethod.hide();
                }

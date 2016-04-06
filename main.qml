@@ -3,6 +3,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
+import QtQuick.Controls.Styles 1.4
 import "network.js" as Network
 
 ApplicationWindow {
@@ -77,9 +78,36 @@ ApplicationWindow {
     MainForm {
         id: mainform
         anchors.fill: parent
+
+        pettorina.placeholderText: qsTr("es: 10");
+        //voto.validator: DoubleValidator { bottom:0; top: 10; decimals: 2; notation: DoubleValidator.StandardNotation}
+        pettorina.validator: IntValidator { bottom:0; top: 10000}
+        pettorina.inputMethodHints: Qt.ImhFormattedNumbersOnly
+        pettorina.onTextChanged: {
+            var pf = parseInt(pettorina.text);
+            console.log(pf);
+            if (pf >= 0 && pf <= 10000) {
+                pettorina.textColor = "green";
+            } else {
+                pettorina.textColor = "red";
+            }
+        }
+
+        voto.placeholderText: qsTr("es: 6,5");
+        voto.validator: RegExpValidator { regExp: /\d0?(\.\d{0,2})?/ }
+        voto.inputMethodHints: Qt.ImhFormattedNumbersOnly
+        voto.onTextChanged: {
+            var pf = parseFloat(voto.text);
+            console.log(pf);
+            if (pf >= 0.0 && pf <= 10.0) {
+                voto.textColor = "green";
+            } else {
+                voto.textColor = "red";
+            }
+        }
+
         registra.onClicked: messageDialog.show(qsTr("Trasmissione in corso..."), qsTr("In attesa di conferma"))
-        pettorina.placeholderText: qsTr("es. 10");
-        voto.placeholderText: qsTr("es. 6,5");
+        registra.enabled: pettorina.acceptableInput && voto.acceptableInput
     }
 
     MessageDialog {

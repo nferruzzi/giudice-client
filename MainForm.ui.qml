@@ -11,57 +11,76 @@ Item {
     property alias pettorina: pettorina
 
     ColumnLayout {
-        id: columnLayout1
-        spacing: 20
+        id: columnLayout
+        anchors.rightMargin: 10
+        anchors.leftMargin: 10
+        anchors.bottomMargin: 500
+        anchors.topMargin: 5
+        spacing: 5
         anchors.fill: parent
 
         Label {
             id: label1
             text: qsTr("Pettorina")
+            Layout.maximumHeight: 50
+            verticalAlignment: Text.AlignVCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            font.pointSize: 40
+            font.pointSize: 50
             horizontalAlignment: Text.AlignHCenter
         }
 
         TextField {
             id: pettorina
+            Layout.minimumHeight: 150
+            Layout.maximumHeight: 150
             Layout.fillHeight: true
             Layout.fillWidth: true
             font.pointSize: 90
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             placeholderText: qsTr("Pettorina")
-            validator: IntValidator { bottom:0; top: 10000}
+            //inputMethodHints: Qt.ImhFormattedNumbersOnly
         }
 
         Label {
             id: label2
             text: qsTr("Voto")
+            transformOrigin: Item.Center
+            clip: false
+            Layout.maximumHeight: 50
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
             font.pointSize: 40
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
         }
 
         TextField {
             id: voto
             text: qsTr("")
+            Layout.minimumHeight: 150
+            Layout.maximumHeight: 150
             placeholderText: qsTr("Voto")
             Layout.fillHeight: true
             font.pointSize: 90
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             Layout.fillWidth: true
-            validator: DoubleValidator { bottom:0; top: 10; decimals: 2; notation: DoubleValidator.StandardNotation}
         }
 
         Button {
             id: registra
-            height: 90
             text: qsTr("Registra")
+            Layout.maximumHeight: 80
+            Layout.minimumHeight: 0
+            Layout.maximumWidth: 200
+            Layout.fillHeight: true
+            Layout.fillWidth: true
             Layout.rowSpan: 1
             isDefault: false
-            enabled: pettorina.text !== '' && voto.text !== ''
             checkable: false
-            Layout.minimumHeight: 100
-            Layout.minimumWidth: 300
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignBaseline
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             anchors {
                 bottom: parent.bottom
                 bottomMargin: 8
