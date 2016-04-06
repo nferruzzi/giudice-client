@@ -27,10 +27,9 @@ Item {
             id: pettorina
             Layout.fillHeight: true
             Layout.fillWidth: true
-            font.pointSize: 70
+            font.pointSize: 90
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             placeholderText: qsTr("Pettorina")
-            inputMethodHints: Qt.ImhPreferNumbers
             validator: IntValidator { bottom:0; top: 10000}
         }
 
@@ -46,10 +45,9 @@ Item {
             text: qsTr("")
             placeholderText: qsTr("Voto")
             Layout.fillHeight: true
-            font.pointSize: 70
+            font.pointSize: 90
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Layout.fillWidth: true
-            inputMethodHints: Qt.ImhDigitsOnly
             validator: DoubleValidator { bottom:0; top: 10; decimals: 2; notation: DoubleValidator.StandardNotation}
         }
 
@@ -59,7 +57,7 @@ Item {
             text: qsTr("Registra")
             Layout.rowSpan: 1
             isDefault: false
-            enabled: true
+            enabled: pettorina.text !== '' && voto.text !== ''
             checkable: false
             Layout.minimumHeight: 100
             Layout.minimumWidth: 300
@@ -76,7 +74,7 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         font.family: "Arial"
                         font.pointSize: 30
-                        color: "green"
+                        color: registra.enabled ? "green" : "gray"
                         text: control.text
                         anchors.bottom: parent.bottom
                         anchors.bottomMargin: 1

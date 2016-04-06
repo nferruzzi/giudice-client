@@ -3,5 +3,7 @@
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
         <file>network.js</file>
+        <file>configServerDialog.qml</file>
+        <file>giudiceServerDialog.qml</file>
     </qresource>
 </RCC>
