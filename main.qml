@@ -35,17 +35,15 @@ ApplicationWindow {
 
         Network.checkConnection(function(state) {
             if (state) {
-                console.log(state);
-                var version = '1.0';
+                currentGara = state;
 
+                var version = '1.0';
                 if (state.version !== version) {
                     stateGroup.state = "off";
                     statusBar.state = "serverError";
                     messageDialog.show(qsTr("Errore"), qsTr("Il server (%1) e il client (%2) non usano la stessa versione del software").arg(state.version).arg(version));
                     return;
                 }
-
-                console.log(state.version);
             }
         });
     }
