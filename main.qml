@@ -12,6 +12,12 @@ ApplicationWindow {
     width: 640
     height: 480
     title: qsTr("Giudice di gara")
+    property var currentGara
+
+    Component.onCompleted: {
+        console.log("UUID: ", settings.uuid);
+        Network.userUUID = settings.uuid;
+    }
 
     StateGroup {
         id: stateGroup
@@ -101,7 +107,11 @@ ApplicationWindow {
                 PropertyChanges {
                     target: labelState
                     color: "green"
-                    text: qsTr("Giudice: %1 Server: %2").arg(settings.numeroGiudice).arg(settings.serverAddress)
+                    text: qsTr("Giudice: %1 Trial: %2 | Gara: %3 | Server: %4").
+                        arg(settings.numeroGiudice).
+                        arg(root.currentGara.current_trial+1).
+                        arg(root.currentGara.description).
+                        arg(settings.serverAddress)
                 }
             },
             State {
@@ -134,6 +144,8 @@ ApplicationWindow {
         id: mainform
         anchors.fill: parent
 
+        formColumnLayout.anchors.bottomMargin: Qt.platform.os === "android" ? 500 : 0;
+
         pettorina.placeholderText: qsTr("es: 10");
         //voto.validator: DoubleValidator { bottom:0; top: 10; decimals: 2; notation: DoubleValidator.StandardNotation}
         pettorina.validator: IntValidator { bottom:0; top: 10000}
@@ -148,7 +160,7 @@ ApplicationWindow {
             }
         }
 
-        voto.placeholderText: qsTr("es: 6,5");
+        voto.placeholderText: qsTr("es: 6.5");
         voto.validator: RegExpValidator { regExp: /\d0?(\.\d{0,2})?/ }
         voto.inputMethodHints: Qt.ImhFormattedNumbersOnly
         voto.onTextChanged: {
@@ -161,8 +173,17 @@ ApplicationWindow {
             }
         }
 
-        registra.onClicked: messageDialog.show(qsTr("Trasmissione in corso..."), qsTr("In attesa di conferma"))
-        registra.enabled: pettorina.acceptableInput && voto.acceptableInput
+        registra.onClicked: {
+            Network.sendVote(root.currentGara.current_trial, parseInt(pettorina.text), parseFloat(voto.text), settings.numeroGiudice, function(xhr, resp) {
+                if (resp != null) {
+                    messageDialog.show(qsTr("Voto registrato"), qsTr("Ok"));
+                } else {
+                    messageDialog.show(qsTr("Errore"), qsTr("Il voto non e' stato accettato"));
+                }
+            });
+        }
+
+        registra.enabled: pettorina.acceptableInput && voto.acceptableInput && statusBar.state == "connected"
     }
 
     MessageDialog {
@@ -179,5 +200,6 @@ ApplicationWindow {
         id: settings
         property string serverAddress: ""
         property string numeroGiudice: ""
+        property string uuid: externals.UUID
     }
 }

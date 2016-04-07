@@ -9,6 +9,7 @@ Item {
     property alias registra: registra
     property alias voto: voto
     property alias pettorina: pettorina
+    property alias formColumnLayout: columnLayout
 
     ColumnLayout {
         id: columnLayout

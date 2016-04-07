@@ -1,3 +1,4 @@
+var userUUID = null;
 
 function request(verb, endpoint, obj, cb) {
     var BASE = 'http://%1'.arg(settings.serverAddress)
@@ -16,7 +17,13 @@ function request(verb, endpoint, obj, cb) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             timer.running = false;
             if(cb) {
-                var res = JSON.parse(xhr.responseText.toString())
+                var res = null;
+                try {
+                    res = JSON.parse(xhr.responseText.toString())
+                }
+                catch(e) {
+                    console.log("Errore:", e);
+                }
                 cb(xhr, res);
             }
         }
@@ -25,6 +32,8 @@ function request(verb, endpoint, obj, cb) {
     xhr.open(verb, BASE + (endpoint?'/' + endpoint:''));
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('X-User-auth', userUUID);
+
     var data = obj?JSON.stringify(obj):''
     xhr.send(data)
 }
@@ -50,5 +59,6 @@ function sendVote(trial, user, vote, judge, cb) {
     var obj = {'trial': trial, 'user': user, 'vote': vote, 'judge': judge};
     request('POST', 'vote', obj, function(xhr, resp) {
         print("Response: ", resp);
+        if (cb) cb(xhr, resp);
     });
 }
