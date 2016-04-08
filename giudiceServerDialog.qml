@@ -1,13 +1,16 @@
-import QtQuick 2.4
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
+import "other.js" as Other
 
 Dialog {
     id: giudiceServerDialog
     title: qsTr("Configurazione")
     standardButtons: StandardButton.Save | StandardButton.Cancel
+    property var callback
+
     ColumnLayout {
         width: parent ? parent.width : 100
         Label {
@@ -38,11 +41,14 @@ Dialog {
     function doAccepted() {
         console.log(numeroGiudice.text);
         Qt.inputMethod.hide();
+
         if (numeroGiudice.text !== "") {
             settings.numeroGiudice = numeroGiudice.text
-            messageDialog.show(qsTr("Ok"), qsTr("Fatto"));
+            Other.ShowDialog(qsTr("Ok"), qsTr("Fatto"));
+            if (giudiceServerDialog.callback) giudiceServerDialog.callback(true);
         } else {
-            messageDialog.show(qsTr("Errore"), qsTr("Il campo non puo' essere vuoto"));
+            Other.ShowDialog(qsTr("Errore"), qsTr("Il campo non puo' essere vuoto"));
+            if (giudiceServerDialog.callback) giudiceServerDialog.callback(false);
         }
     }
-}
+ }

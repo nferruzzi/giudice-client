@@ -38,18 +38,11 @@ function request(verb, endpoint, obj, cb) {
     xhr.send(data)
 }
 
-function checkConnection(cb) {
+function checkConnection(judge, cb) {
     print("Check connection");
 
-    request('GET', null, null, function (xhr, res) {
-        print("Callback");
-        if (xhr.status === 200) {
-            statusBar.state = "connected";
-            if (cb) cb(res);
-        } else {
-            statusBar.state = "disconnected";
-            if (cb) cb(null);
-        }
+    request('GET', "keepAlive/"+judge, null, function (xhr, res) {
+        if (cb) cb(xhr, res);
     });
 }
 

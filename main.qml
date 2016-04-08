@@ -1,10 +1,11 @@
-import QtQuick 2.4
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 import QtQuick.Controls.Styles 1.4
 import "network.js" as Network
+import "other.js" as Other
 
 ApplicationWindow {
     id: root
@@ -39,17 +40,41 @@ ApplicationWindow {
     function checkConnection() {
         if (stateGroup.state === "off") return;
 
-        Network.checkConnection(function(state) {
+        Network.checkConnection(settings.numeroGiudice, function(xhr, state) {
+            if (xhr.status == 401) {
+                var msg = qsTr("Il server non e' compatibile con questo client");
+                stateGroup.state = "off";
+                statusBar.state = "serverError";
+                statusBar.errorMessage = msg;
+                Other.ShowDialog(qsTr("Errore"), msg);
+                return;
+            }
+
+            if (xhr.status == 403) {
+                var msg = qsTr("Il giudice %1 e' gia' in uso").arg(settings.numeroGiudice);
+                stateGroup.state = "off";
+                statusBar.errorMessage = msg;
+                statusBar.state = "serverError";
+                Other.ShowDialog(qsTr("Errore"), msg);
+                return;
+            }
+
             if (state) {
                 currentGara = state;
 
                 var version = '1.0';
                 if (state.version !== version) {
+                    var msg = qsTr("Il server (%1) e il client (%2) non usano la stessa versione del software").arg(state.version).arg(version);
                     stateGroup.state = "off";
                     statusBar.state = "serverError";
-                    messageDialog.show(qsTr("Errore"), qsTr("Il server (%1) e il client (%2) non usano la stessa versione del software").arg(state.version).arg(version));
+                    statusBar.errorMessage = msg;
+                    Other.ShowDialog(qsTr("Errore"), msg);
                     return;
                 }
+
+                statusBar.state = "connected";
+            } else {
+                statusBar.state = "disconnected";
             }
         });
     }
@@ -65,17 +90,21 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&Giudice")
                 onTriggered: function () {
-                    var component = Qt.createComponent("giudiceServerDialog.qml");
-                    var dlg = component.createObject(root);
-                    dlg.open();
+                    Other.ShowGiudiceDialog(function (state) {
+                        if (state) {
+                            stateGroup.state = "on";
+                        }
+                    });
                 }
             }
             MenuItem {
                 text: qsTr("&Server")
                 onTriggered: function () {
-                    var component = Qt.createComponent("configServerDialog.qml");
-                    var dlg = component.createObject(root);
-                    dlg.open();
+                    Other.ShowServerDialog(function (state) {
+                        if (state) {
+                            stateGroup.state = "on";
+                        }
+                    });
                 }
             }
             MenuSeparator {}
@@ -101,6 +130,8 @@ ApplicationWindow {
         Component.onCompleted: {
             checkConnection();
         }
+        property string errorMessage
+
         states: [
             State {
                 name: "connected"
@@ -127,7 +158,7 @@ ApplicationWindow {
                 PropertyChanges {
                     target: labelState
                     color: "red"
-                    text: qsTr("Server non compatibile: %1").arg(settings.serverAddress)
+                    text: statusBar.errorMessage
                 }
             }
         ]
@@ -176,24 +207,14 @@ ApplicationWindow {
         registra.onClicked: {
             Network.sendVote(root.currentGara.current_trial, parseInt(pettorina.text), parseFloat(voto.text), settings.numeroGiudice, function(xhr, resp) {
                 if (resp != null) {
-                    messageDialog.show(qsTr("Voto registrato"), qsTr("Ok"));
+                    Other.ShowDialog(qsTr("Voto registrato"), qsTr("Ok"));
                 } else {
-                    messageDialog.show(qsTr("Errore"), qsTr("Il voto non e' stato accettato"));
+                    Other.ShowDialog(qsTr("Errore"), qsTr("Il voto non e' stato accettato"));
                 }
             });
         }
 
         registra.enabled: pettorina.acceptableInput && voto.acceptableInput && statusBar.state == "connected"
-    }
-
-    MessageDialog {
-        id: messageDialog
-
-        function show(title, caption) {
-            messageDialog.title = title;
-            messageDialog.text = caption;
-            messageDialog.open();
-        }
     }
 
     Settings {

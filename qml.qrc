@@ -5,5 +5,7 @@
         <file>network.js</file>
         <file>configServerDialog.qml</file>
         <file>giudiceServerDialog.qml</file>
+        <file>messageDialog.qml</file>
+        <file>other.js</file>
     </qresource>
 </RCC>
