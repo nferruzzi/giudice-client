@@ -26,9 +26,9 @@ Dialog {
                text: settings.numeroGiudice
                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                Layout.rowSpan: 1
-               placeholderText: qsTr("es. 1,2,3,4 o 5")
+               placeholderText: qsTr("es. da 1 a 6")
                inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText | Qt.ImhDigitsOnly
-               validator: IntValidator { bottom:1; top: 5}
+               validator: IntValidator { bottom:1; top: 6}
                Keys.onReturnPressed: {
                    Qt.inputMethod.hide();
                }

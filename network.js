@@ -19,7 +19,8 @@ function request(verb, endpoint, obj, cb) {
             if(cb) {
                 var res = null;
                 try {
-                    res = JSON.parse(xhr.responseText.toString())
+                    console.log(xhr.responseText);
+                    res = JSON.parse(xhr.responseText.toString());
                 }
                 catch(e) {
                     console.log("Errore:", e);

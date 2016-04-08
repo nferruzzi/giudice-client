@@ -59,6 +59,15 @@ ApplicationWindow {
                 return;
             }
 
+            if (xhr.status == 404) {
+                var msg = qsTr("Sono richiesti meno giudici: %1").arg(state['max']);
+                stateGroup.state = "off";
+                statusBar.errorMessage = msg;
+                statusBar.state = "serverError";
+                Other.ShowDialog(qsTr("Errore"), msg);
+                return;
+            }
+
             if (state) {
                 currentGara = state;
 
