@@ -188,12 +188,12 @@ ApplicationWindow {
 
         pettorina.placeholderText: qsTr("es: 10");
         //voto.validator: DoubleValidator { bottom:0; top: 10; decimals: 2; notation: DoubleValidator.StandardNotation}
-        pettorina.validator: IntValidator { bottom:1; top: 10000}
+        pettorina.validator: IntValidator { bottom:0; top: 10000}
         pettorina.inputMethodHints: Qt.ImhFormattedNumbersOnly
         pettorina.onTextChanged: {
             var pf = parseInt(pettorina.text);
             console.log(pf);
-            if (pf > 0 && pf <= 10000) {
+            if (pf >= 0 && pf <= 10000) {
                 pettorina.textColor = "green";
             } else {
                 pettorina.textColor = "red";
