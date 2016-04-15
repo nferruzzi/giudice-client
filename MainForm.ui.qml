@@ -22,7 +22,7 @@ Item {
 
         Label {
             id: label1
-            text: qsTr("Pettorina")
+            text: qsTr("Concorrente")
             Layout.maximumHeight: 50
             verticalAlignment: Text.AlignVCenter
             Layout.fillHeight: true
@@ -40,7 +40,7 @@ Item {
             Layout.fillWidth: true
             font.pointSize: 90
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-            placeholderText: qsTr("Pettorina")
+            placeholderText: qsTr("Concorrete")
             //inputMethodHints: Qt.ImhFormattedNumbersOnly
         }
 
