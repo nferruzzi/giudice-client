@@ -147,7 +147,7 @@ ApplicationWindow {
                 PropertyChanges {
                     target: labelState
                     color: "green"
-                    text: qsTr("Giudice: %1 Trial: %2 | Gara: %3 | Server: %4").
+                    text: qsTr("Giudice: %1 | Prova: %2\nDescrizione: %3 | Server: %4").
                         arg(settings.numeroGiudice).
                         arg(root.currentGara.current_trial+1).
                         arg(root.currentGara.description).
@@ -159,7 +159,7 @@ ApplicationWindow {
                 PropertyChanges {
                     target: labelState
                     color: "red"
-                    text: qsTr("Server non raggiungibile: %1").arg(settings.serverAddress)
+                    text: qsTr("\nServer non raggiungibile: %1").arg(settings.serverAddress)
                 }
             },
             State {
@@ -175,7 +175,8 @@ ApplicationWindow {
             anchors.fill: parent
             Label {
                 id: labelState
-                font.pointSize: 16
+                font.pointSize: 30
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
@@ -216,6 +217,8 @@ ApplicationWindow {
         registra.onClicked: {
             Network.sendVote(root.currentGara.current_trial, parseInt(pettorina.text), parseFloat(voto.text), settings.numeroGiudice, function(xhr, resp) {
                 if (resp != null && xhr.status == 200) {
+                    voto.text = "";
+                    pettorina.text = "";
                     Other.ShowDialog(qsTr("Voto registrato"), qsTr("Ok"));
                 } else {
                     Other.ShowDialog(qsTr("Errore"), qsTr("Il voto non e' stato accettato"));
