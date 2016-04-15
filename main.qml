@@ -201,12 +201,12 @@ ApplicationWindow {
         }
 
         voto.placeholderText: qsTr("es: 8.25");
-        voto.validator: RegExpValidator { regExp: /0*\d{1,3}(\.\d{0,2})?/ }
+        voto.validator: RegExpValidator { regExp: /0*\d{1,2}(\.\d{0,2})?/ }
         voto.inputMethodHints: Qt.ImhFormattedNumbersOnly
         voto.onTextChanged: {
             var pf = parseFloat(voto.text);
             console.log(pf);
-            if (pf >= 0.0 && pf <= 100.0) {
+            if (pf >= 0.0 && pf <= 10.0) {
                 voto.textColor = "green";
             } else {
                 voto.textColor = "red";
