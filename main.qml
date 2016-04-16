@@ -12,8 +12,10 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Giudice di gara")
+    title: qsTr("Giudice esame")
     property var currentGara
+    property var latestGaraUUID;
+    property var latestGaraIndex;
 
     Component.onCompleted: {
         console.log("UUID: ", settings.uuid);
@@ -79,6 +81,17 @@ ApplicationWindow {
                     statusBar.errorMessage = msg;
                     Other.ShowDialog(qsTr("Errore"), msg);
                     return;
+                }
+
+                if (state['message']) {
+                    if (latestGaraUUID != state['uuid']) {
+                        latestGaraUUID = state['uuid'];
+                        latestGaraIndex = 0;
+                    }
+                    if (latestGaraIndex < state['message']['index']) {
+                        latestGaraIndex = state['message']['index'];
+                        Other.ShowDialog(qsTr("Messaggio ricevuto"), state['message']['text']);
+                    }
                 }
 
                 statusBar.state = "connected";
@@ -176,7 +189,6 @@ ApplicationWindow {
             Label {
                 id: labelState
                 font.pointSize: 30
-                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
