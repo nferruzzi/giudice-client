@@ -160,9 +160,11 @@ ApplicationWindow {
                 PropertyChanges {
                     target: labelState
                     color: "green"
-                    text: qsTr("Giudice: %1 | Prova: %2\nDescrizione: %3 | Server: %4").
+                    text: qsTr("Giudice: %1\nEsame: %2 | Prova: %3\n%4: %5\nServer: %6").
                         arg(settings.numeroGiudice).
+                        arg(root.currentGara.state).
                         arg(root.currentGara.current_trial+1).
+                        arg(root.currentGara.date).
                         arg(root.currentGara.description).
                         arg(settings.serverAddress)
                 }
@@ -196,8 +198,10 @@ ApplicationWindow {
     MainForm {
         id: mainform
         anchors.fill: parent
+        labelPettorale.color: "green"
+        labelVoto.color: "blue"
 
-        formColumnLayout.anchors.bottomMargin: Qt.platform.os === "android" ? 500 : 0;
+        formColumnLayout.anchors.bottomMargin: Qt.platform.os === "android" ? 400 : 0;
 
         pettorina.placeholderText: qsTr("es: 10");
         //voto.validator: DoubleValidator { bottom:0; top: 10; decimals: 2; notation: DoubleValidator.StandardNotation}
@@ -220,7 +224,7 @@ ApplicationWindow {
             var pf = parseFloat(voto.text);
             console.log(pf);
             if (pf >= 0.0 && pf <= 10.0) {
-                voto.textColor = "green";
+                voto.textColor = "blue";
             } else {
                 voto.textColor = "red";
             }

@@ -10,6 +10,8 @@ Item {
     property alias voto: voto
     property alias pettorina: pettorina
     property alias formColumnLayout: columnLayout
+    property alias labelPettorale: label1
+    property alias labelVoto: label2
 
     ColumnLayout {
         id: columnLayout
